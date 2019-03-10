@@ -81,7 +81,14 @@ function displayShoppingList(shoppingList) {
     shoppingList.forEach(element => {
         let li = document.createElement('li');
         li.innerHTML = element;
+        li.setAttribute('id', element);
+        let a = document.createElement('a');
+        a.innerHTML = ' X';
+        a.href = '#'
+        a.setAttribute('onclick', `removeShoppingListElement(${element})`);
+        li.appendChild(a);
         ul.appendChild(li);
+       
     });
     div.appendChild(ul);
     document.body.appendChild(div);
@@ -108,6 +115,20 @@ function removeElementById(elementId) {
     if (element) {
     element.parentNode.removeChild(element);
     }
+}
+
+function removeShoppingListElement(elementId) {
+    Object.keys(this.shopsList).map( shop => {
+        if (this.shopsList[shop].name === document.getElementById('shopsSelect').value) {
+            shoppingList = this.shopsList[shop].shoppingList;
+            this.shopsList[shop].shoppingList = this.shopsList[shop].shoppingList.filter( element => element !== elementId.id); 
+            console.log(this.shopsList[shop].shoppingList)        
+        };
+    });
+    localStorage.setItem('shops', JSON.stringify(this.shopsList));
+    this.setShopsList();
+    this.removeElementById('shopsListContainer');
+    this.updateShopsList();
 }
 
 
