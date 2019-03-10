@@ -7,12 +7,9 @@ window.onload = function () {
     if (this.shopsList.length > 0) {
     this.updateShopsList();
     }
-    console.log(this.shoppingList)
-
 }
 
 function setShopsList() {
-    //localStorage.setItem('shops', JSON.stringify({name: 'Lidl', shoppingList: {}}));  
     if (localStorage.getItem('shops')) {
         localStorage.getItem('shops').length > 1 ?
             this.shopsList = JSON.parse(localStorage.getItem('shops')) :
@@ -48,11 +45,16 @@ function updateShopsList() {
 
 function addShop() {
     let shopName = document.getElementById('shopName').value;
+    document.getElementById('shopName').value = "";
     this.shopsList.push({
         name: shopName,
         shoppingList: []
     });
     localStorage.setItem('shops', JSON.stringify(this.shopsList));
+    this.removeElementById('shopsListContainer');
+    this.updateShopsList();
+    this.currentShop = shopName;
+    this.updateShoppingList();
 }
 
 function changeShoppingList() {
@@ -66,7 +68,6 @@ function updateShoppingList() {
     }
     this.removeElementById('currentShoppingList');
     Object.keys(this.shopsList).forEach( shop => {
-        console.log( this.shopsList[shop].name)
         if (this.shopsList[shop].name === document.getElementById('shopsSelect').value) {
             this.displayShoppingList(this.shopsList[shop].shoppingList);
         };
