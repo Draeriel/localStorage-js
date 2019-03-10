@@ -4,9 +4,6 @@ currentShop = '';
 
 window.onload = function () {
     this.setShopsList();
-    if (this.shopsList.length > 0) {
-    this.updateShopsList();
-    }
 }
 
 function setShopsList() {
@@ -15,9 +12,13 @@ function setShopsList() {
             this.shopsList = JSON.parse(localStorage.getItem('shops')) :
             this.shopsList.push(JSON.parse(localStorage.getItem('shops')))
     }
+    if (this.shopsList.length > 0) {
+        this.updateShopsList();
+        }
 }
 
 function updateShopsList() {   
+    this.removeElementById('shopsListContainer');
         let div = document.createElement('div');
         div.setAttribute('id', 'shopsListContainer');
         let shopsSelect = document.createElement('select');
@@ -40,6 +41,13 @@ function updateShopsList() {
 
         document.body.insertBefore(div, document.getElementById('shopForm'));
 
+        this.removeElementById('removeButton');
+        let button2 = document.createElement('button');
+        button2.innerHTML = 'Eliminar Tienda';
+        button2.setAttribute('onclick', 'removeShop()');
+        button2.setAttribute('id', 'removeButton');
+        document.body.appendChild(button2);
+
         this.updateShoppingList();
 }
 
@@ -51,7 +59,6 @@ function addShop() {
         shoppingList: []
     });
     localStorage.setItem('shops', JSON.stringify(this.shopsList));
-    this.removeElementById('shopsListContainer');
     this.updateShopsList();
     this.currentShop = shopName;
     this.updateShoppingList();
@@ -106,8 +113,6 @@ function addToShoppingList() {
     });
     localStorage.setItem('shops', JSON.stringify(this.shopsList));
     this.setShopsList();
-    this.removeElementById('shopsListContainer');
-    this.updateShopsList();
 }
 
 function removeElementById(elementId) {
@@ -121,14 +126,26 @@ function removeShoppingListElement(elementId) {
     Object.keys(this.shopsList).map( shop => {
         if (this.shopsList[shop].name === document.getElementById('shopsSelect').value) {
             shoppingList = this.shopsList[shop].shoppingList;
-            this.shopsList[shop].shoppingList = this.shopsList[shop].shoppingList.filter( element => element !== elementId.id); 
-            console.log(this.shopsList[shop].shoppingList)        
+            this.shopsList[shop].shoppingList = this.shopsList[shop].shoppingList.filter( element => element !== elementId.id);       
         };
     });
     localStorage.setItem('shops', JSON.stringify(this.shopsList));
     this.setShopsList();
+}
+
+function removeShop() {
+    this.shopsList = Object.keys(this.shopsList).filter( shop => 
+        this.shopsList[shop].name !== document.getElementById('shopsSelect').value   
+   ).map( key  => this.shopsList[parseInt(key)]);
+   if (this.shopsList[0]) {
+        this.currentShop = this.shopsList[0].name;  
+   } else {
     this.removeElementById('shopsListContainer');
-    this.updateShopsList();
+    this.removeElementById('removeButton');
+    this.removeElementById('currentShoppingList');
+   }
+   localStorage.setItem('shops', JSON.stringify(this.shopsList));
+   this.setShopsList();
 }
 
 
