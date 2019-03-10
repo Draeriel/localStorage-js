@@ -24,6 +24,7 @@ function updateShopsList() {
         let div = document.createElement('div');
         let shopsSelect = document.createElement('select');
         shopsSelect.setAttribute('id', 'shopsSelect');
+        shopsSelect.setAttribute('onchange', 'updateShoppingList()');
         Object.keys(this.shopsList).forEach(shop => {
             let shopsOption = document.createElement('option');
             shopsOption.innerHTML = this.shopsList[shop].name;
@@ -52,6 +53,7 @@ function addShop() {
 }
 
 function updateShoppingList() {
+    this.removeCurrentShoppingList();
     Object.keys(this.shopsList).forEach( shop => {
         console.log( this.shopsList[shop].name)
         if (this.shopsList[shop].name === document.getElementById('shopsSelect').value) {
@@ -62,6 +64,7 @@ function updateShoppingList() {
 
 function displayShoppingList(shoppingList) {
     let div = document.createElement('div');
+    div.setAttribute('id', 'currentShoppingList');
         let ul = document.createElement('ul');
     shoppingList.forEach(element => {
         let li = document.createElement('li');
@@ -80,6 +83,13 @@ function addToShoppingList() {
         };
     });
     localStorage.setItem('shops', JSON.stringify(this.shopsList));
+}
+
+function removeCurrentShoppingList() {
+    let list = document.getElementById('currentShoppingList');
+    if (list) {
+    list.parentNode.removeChild(list);
+    }
 }
 
 
