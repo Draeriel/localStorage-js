@@ -1,11 +1,11 @@
 shopsList = [];
 shoppingList = [];
+currentShop = '';
 
 window.onload = function () {
     this.setShopsList();
     if (this.shopsList.length > 0) {
     this.updateShopsList();
-    this.updateShoppingList();
     }
     console.log(this.shoppingList)
 
@@ -22,9 +22,10 @@ function setShopsList() {
 
 function updateShopsList() {   
         let div = document.createElement('div');
+        div.setAttribute('id', 'shopsListContainer');
         let shopsSelect = document.createElement('select');
         shopsSelect.setAttribute('id', 'shopsSelect');
-        shopsSelect.setAttribute('onchange', 'updateShoppingList()');
+        shopsSelect.setAttribute('onchange', 'changeShoppingList()');
         Object.keys(this.shopsList).forEach(shop => {
             let shopsOption = document.createElement('option');
             shopsOption.innerHTML = this.shopsList[shop].name;
@@ -41,6 +42,8 @@ function updateShopsList() {
         div.appendChild(button);
 
         document.body.insertBefore(div, document.getElementById('shopForm'));
+
+        this.updateShoppingList();
 }
 
 function addShop() {
@@ -52,8 +55,16 @@ function addShop() {
     localStorage.setItem('shops', JSON.stringify(this.shopsList));
 }
 
+function changeShoppingList() {
+    this.currentShop = document.getElementById('shopsSelect').value;
+    this.updateShoppingList();
+}
+
 function updateShoppingList() {
-    this.removeCurrentShoppingList();
+    if (this.currentShop) {
+        document.getElementById('shopsSelect').value = this.currentShop;
+    }
+    this.removeElementById('currentShoppingList');
     Object.keys(this.shopsList).forEach( shop => {
         console.log( this.shopsList[shop].name)
         if (this.shopsList[shop].name === document.getElementById('shopsSelect').value) {
@@ -76,6 +87,9 @@ function displayShoppingList(shoppingList) {
 }
 
 function addToShoppingList() {
+    if (this.currentShop) {
+        document.getElementById('shopsSelect').value = this.currentShop;
+    }
     Object.keys(this.shopsList).map( shop => {
         if (this.shopsList[shop].name === document.getElementById('shopsSelect').value) {
             shoppingList = this.shopsList[shop].shoppingList;
@@ -83,12 +97,15 @@ function addToShoppingList() {
         };
     });
     localStorage.setItem('shops', JSON.stringify(this.shopsList));
+    this.setShopsList();
+    this.removeElementById('shopsListContainer');
+    this.updateShopsList();
 }
 
-function removeCurrentShoppingList() {
-    let list = document.getElementById('currentShoppingList');
-    if (list) {
-    list.parentNode.removeChild(list);
+function removeElementById(elementId) {
+    let element = document.getElementById(elementId);
+    if (element) {
+    element.parentNode.removeChild(element);
     }
 }
 
