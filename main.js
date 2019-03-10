@@ -52,6 +52,9 @@ function updateShopsList() {
 }
 
 function addShop() {
+    if (!document.getElementById('shopName').value) {
+        return;
+    }
     let shopName = document.getElementById('shopName').value;
     document.getElementById('shopName').value = "";
     this.shopsList.push({
@@ -102,6 +105,9 @@ function displayShoppingList(shoppingList) {
 }
 
 function addToShoppingList() {
+    if (!document.getElementById('shoppingListForm').value) {
+        return;
+    }
     if (this.currentShop) {
         document.getElementById('shopsSelect').value = this.currentShop;
     }
